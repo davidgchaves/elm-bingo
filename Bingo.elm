@@ -3,11 +3,14 @@ module Bingo where
 import Html
 import String
 
-main =
-  -- Without |> operator
-  -- Html.text (String.repeat 3 (String.toUpper "Hello, Elm!"))
-  -- Using |> operator
-  "Bingo!"
+-- a title function
+title times message =
+  message ++ " "
     |> String.toUpper
-    |> String.repeat 3
+    |> String.repeat times
+    |> String.trimRight
     |> Html.text
+
+
+main =
+  title 3 "Bingo!"
