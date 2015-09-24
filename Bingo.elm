@@ -23,6 +23,16 @@ initialModel =
 -- END MODEL
 
 
+-- UPDATE
+type Action = NoOp | Sort
+
+update action model =
+  case action of
+    NoOp -> model
+    Sort -> { model | entries <- List.sortBy .points model.entries }
+-- END UPDATE
+
+
 -- VIEW
 title times message =
   message ++ " "
@@ -65,4 +75,4 @@ view model =
 
 -- WIRE IT ALL TOGETHER!
 main =
-  view initialModel
+  view (update Sort initialModel)
