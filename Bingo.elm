@@ -1,7 +1,8 @@
 module Bingo where
 
-import Html   exposing (..)
-import String exposing (toUpper, repeat, trimRight)
+import Html            exposing (h1, text)
+import Html.Attributes exposing (id, class)
+import String          exposing (toUpper, repeat, trimRight)
 
 -- a title function
 title times message =
@@ -13,4 +14,4 @@ title times message =
 
 
 main =
-  title 3 "Bingo!"
+  h1 [ id "logo", class "classy" ] [ title 3 "Bingo!" ]
