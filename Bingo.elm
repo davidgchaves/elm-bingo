@@ -26,12 +26,13 @@ initialModel =
 
 
 -- UPDATE
-type Action = NoOp | Sort
+type Action = NoOp | Sort | Delete Int
 
 update action model =
   case action of
-    NoOp -> model
-    Sort -> { model | entries <- List.sortBy (\ e -> e.points) model.entries }
+    NoOp      -> model
+    Sort      -> { model | entries <- List.sortBy (\e -> e.points) model.entries }
+    Delete id -> { model | entries <- List.filter (\e -> e.id /= id) model.entries }
 -- END UPDATE
 
 
@@ -55,21 +56,25 @@ pageFooter =
     ]
 
 
-entryList entries =
-  ul [] (List.map entryItem entries)
+entryList address entries =
+  let
+    entryItems = List.map (entryItem address) entries
+  in
+    ul [] entryItems
 
 
-entryItem entry =
+entryItem address entry =
   li []
     [ span [ class "phrase" ] [ text entry.phrase],
-      span [ class "points" ] [ text (toString entry.points) ]
+      span [ class "points" ] [ text (toString entry.points) ],
+      button [ class "delete", onClick address (Delete entry.id) ] []
     ]
 
 
 view address model =
   div [ id "container" ]
     [ pageHeader,
-      entryList model.entries,
+      entryList address model.entries,
       button [ class "sort", onClick address Sort ] [ text "Sort" ],
       pageFooter
     ]
