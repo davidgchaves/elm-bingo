@@ -29,7 +29,7 @@ type Action = NoOp | Sort
 update action model =
   case action of
     NoOp -> model
-    Sort -> { model | entries <- List.sortBy .points model.entries }
+    Sort -> { model | entries <- List.sortBy (\ e -> e.points) model.entries }
 -- END UPDATE
 
 
