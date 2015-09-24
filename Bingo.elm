@@ -4,7 +4,7 @@ import Html            exposing (h1, text, footer, a, div, span, ul, li)
 import Html.Attributes exposing (id, class, href)
 import String          exposing (toUpper, repeat, trimRight)
 
--- a newEntry function
+-- MODEL
 newEntry phrase points id =
   { phrase = phrase,
     points = points,
@@ -13,7 +13,17 @@ newEntry phrase points id =
   }
 
 
--- a title function
+initialModel =
+  { entries =
+    [ newEntry "In the Cloud" 300 3,
+      newEntry "Future-Proof" 100 1,
+      newEntry "Doing Agile"  200 2
+    ]
+  }
+-- END MODEL
+
+
+-- VIEW
 title times message =
   message ++ " "
     |> toUpper
@@ -22,12 +32,10 @@ title times message =
     |> text
 
 
--- the pageHeader Component
 pageHeader =
   h1 [ id "logo", class "classy" ] [ title 3 "Bingo!" ]
 
 
--- the pageFooter Component
 pageFooter =
   footer []
     [ a [ href "http://elm-lang.org/" ]
@@ -35,15 +43,10 @@ pageFooter =
     ]
 
 
--- the entryList Component
-entryList =
-  ul []
-    [ entryItem (newEntry "Future-Proof" 100 1),
-      entryItem (newEntry "Doing Agile"  200 2)
-    ]
+entryList entries =
+  ul [] (List.map entryItem entries)
 
 
--- the entryItem Component
 entryItem entry =
   li []
     [ span [ class "phrase" ] [ text entry.phrase],
@@ -51,14 +54,15 @@ entryItem entry =
     ]
 
 
--- the view Component
-view =
+view model =
   div [ id "container" ]
     [ pageHeader,
-      entryList,
+      entryList model.entries,
       pageFooter
     ]
+-- END VIEW
 
 
+-- WIRE IT ALL TOGETHER!
 main =
-  view
+  view initialModel
