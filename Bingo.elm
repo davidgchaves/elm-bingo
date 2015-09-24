@@ -1,7 +1,7 @@
 module Bingo where
 
-import Html            exposing (h1, text)
-import Html.Attributes exposing (id, class)
+import Html            exposing (h1, text, footer, a, div)
+import Html.Attributes exposing (id, class, href)
 import String          exposing (toUpper, repeat, trimRight)
 
 -- a title function
@@ -18,5 +18,13 @@ pageHeader =
   h1 [ id "logo", class "classy" ] [ title 3 "Bingo!" ]
 
 
+-- the pageFooter Component
+pageFooter =
+  footer []
+    [ a [ href "http://elm-lang.org/" ]
+        [ text "The Elm Language Homepage"]
+    ]
+
+
 main =
-  pageHeader
+  div [ id "container" ] [ pageHeader, pageFooter ]
