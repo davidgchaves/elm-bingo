@@ -3,6 +3,7 @@ module Bingo where
 import Html            exposing (h1, text, footer, a, div, span, ul, li)
 import Html.Attributes exposing (id, class, href)
 import String          exposing (toUpper, repeat, trimRight)
+import StartApp.Simple as StartApp
 
 -- MODEL
 newEntry phrase points id =
@@ -64,7 +65,7 @@ entryItem entry =
     ]
 
 
-view model =
+view address model =
   div [ id "container" ]
     [ pageHeader,
       entryList model.entries,
@@ -75,6 +76,4 @@ view model =
 
 -- WIRE IT ALL TOGETHER!
 main =
-  initialModel
-    |> update Sort
-    |> view
+  StartApp.start { model = initialModel, view = view, update = update }
