@@ -1,7 +1,8 @@
 module Bingo where
 
-import Html            exposing (h1, text, footer, a, div, span, ul, li)
+import Html            exposing (h1, text, footer, a, div, span, ul, li, button)
 import Html.Attributes exposing (id, class, href)
+import Html.Events     exposing (onClick)
 import String          exposing (toUpper, repeat, trimRight)
 import StartApp.Simple as StartApp
 
@@ -69,6 +70,7 @@ view address model =
   div [ id "container" ]
     [ pageHeader,
       entryList model.entries,
+      button [ class "sort", onClick address Sort ] [ text "Sort" ],
       pageFooter
     ]
 -- END VIEW
