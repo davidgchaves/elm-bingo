@@ -25,6 +25,10 @@ pageFooter =
         [ text "The Elm Language Homepage"]
     ]
 
+-- the view Component
+view =
+  div [ id "container" ] [ pageHeader, pageFooter ]
+
 
 main =
-  div [ id "container" ] [ pageHeader, pageFooter ]
+  view
