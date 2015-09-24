@@ -13,5 +13,10 @@ title times message =
     |> text
 
 
-main =
+-- the pageHeader Component
+pageHeader =
   h1 [ id "logo", class "classy" ] [ title 3 "Bingo!" ]
+
+
+main =
+  pageHeader
