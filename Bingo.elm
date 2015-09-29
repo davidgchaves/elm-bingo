@@ -67,8 +67,7 @@ pageFooter =
 totalPoints entries =
   entries
     |> List.filter .wasSpoken
-    |> List.map .points
-    |> List.sum
+    |> List.foldl (\e acc -> acc + e.points) 0
 
 totalItem total =
   li
