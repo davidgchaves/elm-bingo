@@ -19,13 +19,7 @@ type alias Model = { entries: List Entry }
 
 
 newEntry : String -> Int -> Int -> Entry
-newEntry phrase points id =
-  { phrase = phrase,
-    points = points,
-    wasSpoken = False,
-    id = id
-  }
-
+newEntry phrase points id = Entry phrase points False id
 
 initialModel : Model
 initialModel =
