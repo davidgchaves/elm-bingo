@@ -1,7 +1,7 @@
 module Bingo where
 
 import Html            exposing (h1, text, footer, a, div, span, ul, li, button)
-import Html.Attributes exposing (id, class, href)
+import Html.Attributes exposing (id, class, href, classList)
 import Html.Events     exposing (onClick)
 import String          exposing (toUpper, repeat, trimRight)
 import StartApp.Simple as StartApp
@@ -26,13 +26,21 @@ initialModel =
 
 
 -- UPDATE
-type Action = NoOp | Sort | Delete Int
+type Action
+  = NoOp
+  | Sort
+  | Delete Int
+  | Mark Int
 
 update action model =
   case action of
     NoOp      -> model
     Sort      -> { model | entries <- List.sortBy (\e -> e.points) model.entries }
     Delete id -> { model | entries <- List.filter (\e -> e.id /= id) model.entries }
+    Mark id   ->
+      let updateEntry e = if e.id == id then { e | wasSpoken <- (not e.wasSpoken) } else e
+      in { model | entries <- List.map updateEntry model.entries }
+
 -- END UPDATE
 
 
@@ -64,7 +72,10 @@ entryList address entries =
 
 
 entryItem address entry =
-  li []
+  li
+    [ classList [ ("highlight", entry.wasSpoken) ],
+      onClick address (Mark entry.id)
+    ]
     [ span [ class "phrase" ] [ text entry.phrase],
       span [ class "points" ] [ text (toString entry.points) ],
       button [ class "delete", onClick address (Delete entry.id) ] []
