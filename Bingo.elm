@@ -65,10 +65,10 @@ pageFooter =
 
 
 totalPoints entries =
-  let
-    spokenEntries = List.filter .wasSpoken entries
-    pointValues = List.map .points spokenEntries
-  in  List.sum pointValues
+  entries
+    |> List.filter .wasSpoken
+    |> List.map .points
+    |> List.sum
 
 totalItem total =
   li
