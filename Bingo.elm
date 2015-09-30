@@ -54,13 +54,10 @@ newEntry phrase points id = Entry phrase points False id
 initialModel : Model
 initialModel =
   { entries =
-    [ newEntry "In the Cloud" 300 3,
-      newEntry "Future-Proof" 100 1,
-      newEntry "Doing Agile"  200 2
-    ],
+    [],
     phraseInput = "",
     pointsInput = "",
-    nextId = 4
+    nextId = 1
   }
 -- END MODEL
 
