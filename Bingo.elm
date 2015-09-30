@@ -1,11 +1,35 @@
 module Bingo where
 
-import Html            exposing (Html, h1, text, footer, a, div, span, ul, li, button)
-import Html.Attributes exposing (id, class, href, classList)
-import Html.Events     exposing (onClick)
+import Html            exposing (Html, Attribute, h1, h2, text, footer, a, div, span, ul, li, button, input)
+import Html.Attributes exposing (id, class, href, classList, type', name, autofocus, placeholder, value)
+import Html.Events     exposing (onClick, on, targetValue)
 import String          exposing (toUpper, repeat, trimRight)
 import Signal          exposing (Address)
 import StartApp.Simple as StartApp
+
+-- HELPERS
+{-
+From Html.Events docs:
+  http://package.elm-lang.org/packages/evancz/elm-html/4.0.1/Html-Events#on
+  on : String -> Decoder a -> (a -> Message) -> Attribute
+  Create a custom event listener.
+
+  http://package.elm-lang.org/packages/evancz/elm-html/4.0.1/Html-Events#targetValue
+  targetValue : Decoder String
+  A Json.Decoder for grabbing event.target.value from the triggered event.
+  This is often useful for input event on text fields.
+-}
+onInput : Address a -> (String -> a) -> Attribute
+onInput address contentToValue =
+  on "input" targetValue (\str -> Signal.message address (contentToValue str))
+
+parseInt : String -> Int
+parseInt str =
+  case String.toInt str of
+    Ok value  -> value
+    Err error -> 0
+-- END HELPERS
+
 
 -- MODEL
 type alias Entry =
@@ -15,19 +39,28 @@ type alias Entry =
     id: Int
   }
 
-type alias Model = { entries: List Entry }
+type alias Model =
+  { entries: List Entry,
+    phraseInput: String,
+    pointsInput: String,
+    nextId: Int
+  }
 
 
 newEntry : String -> Int -> Int -> Entry
 newEntry phrase points id = Entry phrase points False id
 
+-- REMEMBER: Mantain all the state in the Model
 initialModel : Model
 initialModel =
   { entries =
     [ newEntry "In the Cloud" 300 3,
       newEntry "Future-Proof" 100 1,
       newEntry "Doing Agile"  200 2
-    ]
+    ],
+    phraseInput = "",
+    pointsInput = "",
+    nextId = 4
   }
 -- END MODEL
 
@@ -38,6 +71,9 @@ type Action
   | Sort
   | Delete Int
   | Mark Int
+  | UpdatePhraseInput String
+  | UpdatePointsInput String
+  | Add
 
 update : Action -> Model -> Model
 update action model =
@@ -48,7 +84,22 @@ update action model =
     Mark id   ->
       let updateEntry e = if e.id == id then { e | wasSpoken <- (not e.wasSpoken) } else e
       in { model | entries <- List.map updateEntry model.entries }
-
+    UpdatePhraseInput contents -> { model | phraseInput <- contents }
+    UpdatePointsInput contents -> { model | pointsInput <- contents }
+    Add ->
+      let
+        entryToAdd      = newEntry model.phraseInput (parseInt model.pointsInput) model.nextId
+        isInvalid model = String.isEmpty model.phraseInput || String.isEmpty model.pointsInput
+      in
+        if isInvalid model
+        then model
+        else
+          { model |
+            phraseInput <- "",
+            pointsInput <- "",
+            entries     <- entryToAdd :: model.entries,
+            nextId      <- model.nextId + 1
+          }
 -- END UPDATE
 
 
@@ -111,10 +162,41 @@ entryItem address entry =
     ]
 
 
+entryForm : Address Action -> Model -> Html
+entryForm address model =
+  div []
+    [ input
+        [ type' "text",
+          placeholder "Phrase",
+          value model.phraseInput,
+          name "phrase",
+          autofocus True,
+          onInput address UpdatePhraseInput
+        ]
+        [],
+      input
+        [ type' "number",
+          placeholder "Points",
+          value model.pointsInput,
+          name "points",
+          onInput address UpdatePointsInput
+        ]
+        [],
+      button
+        [ class "add",
+          onClick address Add
+        ]
+        [ text "Add" ],
+      h2
+        []
+        [ text (model.phraseInput ++ " " ++ model.pointsInput) ]
+    ]
+
 view : Address Action -> Model -> Html
 view address model =
   div [ id "container" ]
     [ pageHeader,
+      entryForm address model,
       entryList address model.entries,
       button [ class "sort", onClick address Sort ] [ text "Sort" ],
       pageFooter
