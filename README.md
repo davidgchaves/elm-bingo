@@ -1,12 +1,23 @@
 Elm-Bingo
 =========
 
-### Instructions
+## Instructions
 
-To run this project, just:
+### Install dependencies
 
-```
+```console
+✔ npm install
 ✔ elm package install
-✔ elm make Bingo.elm --output dist/bingo.js
-✔ open dist/index.html
+```
+
+### Start the Dev Server...
+
+```console
+✔ npm run start
+```
+
+### ...or, build into `dist` folder
+
+```console
+✔ npm run build
 ```
