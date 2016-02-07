@@ -53,8 +53,7 @@ newEntry phrase points id = Entry phrase points False id
 -- REMEMBER: Mantain all the state in the Model
 initialModel : Model
 initialModel =
-  { entries =
-    [],
+  { entries = [],
     phraseInput = "",
     pointsInput = "",
     nextId = 1
@@ -76,13 +75,13 @@ update : Action -> Model -> Model
 update action model =
   case action of
     NoOp      -> model
-    Sort      -> { model | entries <- List.sortBy (\e -> e.points) model.entries }
-    Delete id -> { model | entries <- List.filter (\e -> e.id /= id) model.entries }
+    Sort      -> { model | entries = List.sortBy (\e -> e.points) model.entries }
+    Delete id -> { model | entries = List.filter (\e -> e.id /= id) model.entries }
     Mark id   ->
-      let updateEntry e = if e.id == id then { e | wasSpoken <- (not e.wasSpoken) } else e
-      in { model | entries <- List.map updateEntry model.entries }
-    UpdatePhraseInput contents -> { model | phraseInput <- contents }
-    UpdatePointsInput contents -> { model | pointsInput <- contents }
+      let updateEntry e = if e.id == id then { e | wasSpoken = (not e.wasSpoken) } else e
+      in { model | entries = List.map updateEntry model.entries }
+    UpdatePhraseInput contents -> { model | phraseInput = contents }
+    UpdatePointsInput contents -> { model | pointsInput = contents }
     Add ->
       let
         entryToAdd      = newEntry model.phraseInput (parseInt model.pointsInput) model.nextId
@@ -92,10 +91,10 @@ update action model =
         then model
         else
           { model |
-            phraseInput <- "",
-            pointsInput <- "",
-            entries     <- entryToAdd :: model.entries,
-            nextId      <- model.nextId + 1
+            phraseInput = "",
+            pointsInput = "",
+            entries     = entryToAdd :: model.entries,
+            nextId      = model.nextId + 1
           }
 -- END UPDATE
 
